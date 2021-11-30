@@ -31,8 +31,8 @@ export default function Message() {
     getDoc(docRef).then((doc) => {
       console.log(doc.data(), doc.id)
 
-      deleteDoc(docRef).then(()=>{
-        console.log('Message was deleted')
+      deleteDoc(docRef).then(() => {
+        console.log("Message was deleted")
       })
     })
   }
@@ -40,17 +40,21 @@ export default function Message() {
     <div className={styles.messages}>
       {messages.map((message: any) => {
         return (
-          <div
-            key={message?.id}
-            className={message.uid !== auth.currentUser?.uid ? styles.messages_send : styles.message_received}
-            onClick={() => {
-             message.uid === auth.currentUser?.uid && deleteMessage(message?.id)
-            }}
-          >
+          <div key={message?.id} className={message.uid !== auth.currentUser?.uid ? styles.messages_send : styles.message_received}>
             <div className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveContainer : styles.messages_sendContainer}>
               <img className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveImage : styles.messages_sendImage} src={message.photoURL} alt="" />
               <h6 className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveMessage : styles.messages_sendMessage}>{message?.title}</h6>
-              
+              {message.uid === auth.currentUser?.uid && (
+                <button
+                  className={styles.deleteMessage}
+                  onClick={() => {
+                    message.uid === auth.currentUser?.uid && deleteMessage(message?.id)
+                  }}
+                
+                >
+                  <i className=" fas fa-trash"></i>
+                </button>
+              )}
             </div>
           </div>
         )
