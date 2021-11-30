@@ -28,12 +28,8 @@ export default function Message() {
 
   function deleteMessage(id: string) {
     const docRef = doc(db, "messages", id)
-    getDoc(docRef).then((doc) => {
-      console.log(doc.data(), doc.id)
-
-      deleteDoc(docRef).then(() => {
-        console.log("Message was deleted")
-      })
+    deleteDoc(docRef).then(() => {
+      console.log("Message was deleted")
     })
   }
   return (
@@ -50,7 +46,7 @@ export default function Message() {
                   onClick={() => {
                     message.uid === auth.currentUser?.uid && deleteMessage(message?.id)
                   }}
-                
+                  name="Delete"
                 >
                   <i className=" fas fa-trash"></i>
                 </button>
