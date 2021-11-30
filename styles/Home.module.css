@@ -57,6 +57,7 @@
     overflow-wrap: break-word;
     padding: 10px;
     color: #fff;
+    cursor: pointer;
 }
 
 .message_received {
