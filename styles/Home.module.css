@@ -36,6 +36,7 @@
 .messages_receiveContainer {
     width: 100%;
     display: flex;
+    margin-top: 0.5rem;
 }
 
 .messages_receiveImage {
@@ -82,7 +83,7 @@
     background-color: rgb(2, 151, 52);
     border-radius: 10px 0 10px 10px;
     margin-top: 0.5rem;
-    text-align: right;
+    direction: ltr;
 }
 
 .deleteMessage {
@@ -99,5 +100,10 @@
 }
 
 .deleteMessage:active {
-    border-color: #dc3545
+    border-color: #dc3545;
+}
+
+.form_input {
+    width: "80%";
+    display: "inline";
 }

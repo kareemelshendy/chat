@@ -1,50 +1,36 @@
-import { collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query } from "@firebase/firestore"
-import React, { useEffect, useRef, useState } from "react"
-import { auth, db } from "../firebase"
+import { User } from "@firebase/auth"
+import React from "react"
 import styles from "../styles/Home.module.css"
-export default function Message() {
-  const [messages, setMessages] = useState([])
-  const scroll = useRef<null | HTMLDivElement>(null)
 
-  useEffect(() => {
-    const colRef = collection(db, "messages")
-    const q = query(colRef, orderBy("createdAt"))
-    onSnapshot(q, (snapshot) => {
-      let messages: any = []
-      snapshot.docs.forEach((doc) => {
-        messages.push({ ...doc.data(), id: doc.id })
-      })
-      setMessages(messages)
-    })
-  }, [])
+type Props = {
+  messages?: Message[]
+  user: User | null
+  deleteMessage: Function
+  scroll: any
+}
+type Message = {
+  id: string
+  title?: string
+  photoURL?: string
+  uid?: string
+  email?: string
+  createdAt?: string
+}
 
-  useEffect(() => {
-    scrollToBottom()
-  }, [messages])
-
-  const scrollToBottom = () => {
-    scroll.current?.scrollIntoView({ behavior: "smooth" })
-  }
-
-  function deleteMessage(id: string) {
-    const docRef = doc(db, "messages", id)
-    deleteDoc(docRef).then(() => {
-      console.log("Message was deleted")
-    })
-  }
+export const Message: React.FC<Props> = ({ messages, user, deleteMessage, scroll }) => {
   return (
     <div className={styles.messages}>
-      {messages.map((message: any) => {
+      {messages?.map((message: any) => {
         return (
-          <div key={message?.id} className={message.uid !== auth.currentUser?.uid ? styles.messages_send : styles.message_received}>
-            <div className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveContainer : styles.messages_sendContainer}>
-              <img className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveImage : styles.messages_sendImage} src={message.photoURL} alt="" />
-              <h6 className={message.uid !== auth.currentUser?.uid ? styles.messages_receiveMessage : styles.messages_sendMessage}>{message?.title}</h6>
-              {message.uid === auth.currentUser?.uid && (
+          <div key={message?.id} className={message.uid !== user?.uid ? styles.messages_send : styles.message_received}>
+            <div className={message.uid !== user?.uid ? styles.messages_receiveContainer : styles.messages_sendContainer}>
+              <img className={message.uid !== user?.uid ? styles.messages_receiveImage : styles.messages_sendImage} src={message.photoURL} alt="" />
+              <h6 className={message.uid !== user?.uid ? styles.messages_receiveMessage : styles.messages_sendMessage}>{message?.title}</h6>
+              {message.uid === user?.uid && (
                 <button
                   className={styles.deleteMessage}
                   onClick={() => {
-                    message.uid === auth.currentUser?.uid && deleteMessage(message?.id)
+                    message.uid === user?.uid && deleteMessage(message?.id)
                   }}
                   name="Delete"
                 >

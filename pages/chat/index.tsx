@@ -1,20 +1,27 @@
-import Message from "../../components/Message"
-import SendMessage from "../../components/SendMessage"
-import Signout from "../../components/Signout"
-import Head from 'next/head'
-
+import Head from "next/head"
+import { useEffect } from "react"
+import { auth } from "../../firebase"
+import { useRouter } from "next/dist/client/router"
+import { ChatHOC } from "../../hoc/chat-hoc"
 function Chat() {
+  const router = useRouter()
+
+  useEffect(() => {
+    let isAuth = auth.currentUser
+    if (!isAuth) {
+      router.push("/")
+    }
+    return () => {
+      isAuth = null
+    }
+  }, [])
   return (
     <>
-    <Head>
-      <title>
-        ChatApp | Chat
-      </title>
-    </Head>
+      <Head>
+        <title>ChatApp | Chat</title>
+      </Head>
       <div className="container mt-4">
-        <Signout />
-        <Message />
-        <SendMessage />
+        <ChatHOC />
       </div>
     </>
   )
